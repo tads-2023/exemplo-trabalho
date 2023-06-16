@@ -4,6 +4,11 @@ class CriarUsuarioController {
         this.form.addEventListener("submit", (e) => {
             e.preventDefault();
 
+            let formData = new FormData();
+
+            formData.append("nome", document.querySelector("#nome").value);
+            formData.append("email", document.querySelector("#email").value);
+            formData.append("senha", document.querySelector("#senha").value);
             let bodyDaRequest = {
                 nome: document.querySelector("#nome").value,
                 email: document.querySelector("#email").value,

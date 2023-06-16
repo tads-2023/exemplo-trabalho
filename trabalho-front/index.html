@@ -8,6 +8,10 @@
 <body>
     <form id="form-criar-user">
         <div>
+            <label for="nome">Foto</label>
+            <input type="file" name="foto" id="foto">
+        </div>
+        <div>
             <label for="nome">Nome</label>
             <input type="text" name="nome" id="nome">
         </div>
@@ -30,6 +34,7 @@
 
     </form>
 
-
+    <script src="CriarUsuarioController.js"></script>
+    <script>new CriarUsuarioController();</script>
 </body>
 </html>

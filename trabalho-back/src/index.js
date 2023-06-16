@@ -1,31 +1,41 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const User = require("./colecoes/User");
+const cors = require("cors");
+const multer  = require('multer')
+const upload = multer({ dest: 'imagens/' })
 
-mongoose.connect("mongodb+srv://rf3993:<password>@cluster0.apqhhjv.mongodb.net/").then( () => {
+const {MongoMemoryServer} = require('mongodb-memory-server');
 
-    const app = express();
+let setup = async () => {
+    const mongod = await MongoMemoryServer.create();
 
-    app.post("/criar-usuario", async (requisicao, resposta) => {
-        const nome = requisicao.body.nome;
-        const email = requisicao.body.email;
-        const senha = requisicao.body.senha;
-        const dataNascimento = requisicao.body.dataNascimento;
+    mongoose.connect(`${mongod.getUri()}trabalho`).then( () => {
+        const app = express();
 
-        const user = await User.create({nome, email, senha, dataNascimento})
+        app.use(cors());
 
-        resposta.send(user)
-    });
+        app.use(express.json());
 
-    // http://localhost:3000
-    app.listen(3000,  () => {
-        console.log("Servidor conectado e ligado!");
+        app.post("/criar-usuario", upload.single("foto"), async (requisicao, resposta) => {
+            const nome = requisicao.body.nome;
+            const email = requisicao.body.email;
+            const senha = requisicao.body.senha;
+            const dataNascimento = requisicao.body.dataNascimento;
+
+            const user = await User.create({nome, email, senha, dataNascimento})
+
+            console.log("Usuarui salvo", user);
+
+            resposta.send(user)
+        });
+
+        // http://localhost:3000
+        app.listen(3000,  () => {
+            console.log("Servidor conectado e ligado!");
+        })
+        //Até aqui está conectado
     })
+} 
 
-
-
-    //Até aqui está conectado
-})
-
-//N"ao esta conectado com o bacno;
-
+setup();
